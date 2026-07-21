@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Wordle Online Free — Daily Word Game &amp; Unlimited Practice | Maybaah's Arcade</title>
+  <title>Wordle Online Free: Daily Word Game &amp; Unlimited Practice | Maybaah's Arcade</title>
   <meta name="description" content="Play Wordle free in your browser: guess the five-letter word in six tries. One daily puzzle for everyone plus unlimited practice mode. No ads, no sign-up, global leaderboard." />
   <meta name="author" content="Artem Kovtoniuk" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
@@ -13,7 +13,7 @@
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="maybaah.github.io" />
-  <meta property="og:title" content="Wordle — Daily Word Game | Maybaah's Arcade" />
+  <meta property="og:title" content="Wordle | Daily Word Game | Maybaah's Arcade" />
   <meta property="og:description" content="Guess the five-letter word in six tries. Daily puzzle + unlimited practice. Free, no ads." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://maybaah.github.io/wordle/" />
@@ -21,7 +21,7 @@
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Wordle — Daily Word Game | Maybaah's Arcade" />
+  <meta name="twitter:title" content="Wordle | Daily Word Game | Maybaah's Arcade" />
   <meta name="twitter:description" content="Guess the five-letter word in six tries. Daily puzzle + unlimited practice. Free, no ads." />
   <meta name="twitter:image" content="https://maybaah.github.io/assets/og.png" />
 
@@ -40,7 +40,7 @@
   {
     "@context": "https://schema.org",
     "@type": "VideoGame",
-    "name": "Wordle — Maybaah's Arcade",
+    "name": "Wordle | Maybaah's Arcade",
     "url": "https://maybaah.github.io/wordle/",
     "description": "Free browser Wordle: guess the five-letter word in six tries. Daily puzzle and unlimited practice mode with a global leaderboard.",
     "genre": "Word game",
@@ -151,12 +151,21 @@
     </div>
 
     <div class="statusline">
-      <span id="s-day">daily <b>#—</b></span>
+      <span id="s-day">daily <b>#…</b></span>
       <span>time <b id="s-time">0.0s</b></span>
       <span>guess any real five-letter word</span>
     </div>
 
     <div id="board" aria-label="Guess grid"></div>
+
+    <div id="submit-run" style="display: none; margin-top: 20px; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <input id="run-name" maxlength="16" placeholder="your name" autocomplete="nickname" spellcheck="false"
+             style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+                    color: var(--text-primary); font-family: var(--font-mono); font-size: 13px;
+                    padding: 7px 12px; width: 150px;" />
+      <button class="btn btn-primary btn-sm" id="btn-submit-run">Submit run</button>
+      <span class="mono" id="run-status" style="font-size: 11px; color: var(--text-secondary);"></span>
+    </div>
 
     <div id="endbar">
       <button class="btn btn-primary btn-sm" id="btn-share">Share result</button>
@@ -168,9 +177,9 @@
 
     <p style="margin-top: 32px; font-size: 13px; color: var(--text-muted); line-height: 1.7;">
       Guess the hidden five-letter word in six tries. After each guess the tiles
-      show how close you are: <span style="color: var(--success);">green</span> — right letter,
-      right spot; <span style="color: var(--warning);">amber</span> — in the word, wrong spot;
-      gray — not in the word. The daily word is the same for everyone and resets at
+      show how close you are: <span style="color: var(--success);">green</span> means right letter,
+      right spot; <span style="color: var(--warning);">amber</span> means in the word, wrong spot;
+      gray means not in the word. The daily word is the same for everyone and resets at
       midnight UTC. Daily wins are verified server-side and ranked on the
       <a href="/leaderboard/" style="text-decoration: underline;">global leaderboard</a>.
     </p>

@@ -1,6 +1,6 @@
-/* Wordle — Maybaah's Arcade.
+/* Wordle for Maybaah's Arcade.
    Daily word is deterministic (same for every visitor); practice picks random.
-   Any real five-letter word is accepted as a guess — the answer list is
+   Any real five-letter word is accepted as a guess; the answer list is
    curated so the hidden word is always common. */
 (function () {
   "use strict";
@@ -108,6 +108,7 @@
   var over = false;
   var startTs = null;
   var timerId = null;
+  var doneMs = null; // final time of a finished daily, kept for submission
 
   var board = document.getElementById("board");
   var kbd = document.getElementById("kbd");
@@ -217,14 +218,15 @@
   function saveDaily() {
     if (mode !== "daily") return;
     localStorage.setItem(STATE_KEY, JSON.stringify({
-      day: dayNumber(), guesses: guesses, over: over, startTs: startTs
+      day: dayNumber(), guesses: guesses, over: over, startTs: startTs, doneMs: doneMs
     }));
   }
 
   /* ── game flow ── */
   function newGame(m) {
     mode = m;
-    guesses = []; current = ""; over = false; startTs = null;
+    guesses = []; current = ""; over = false; startTs = null; doneMs = null;
+    document.getElementById("submit-run").style.display = "none";
     document.getElementById("mode-daily").setAttribute("aria-pressed", String(m === "daily"));
     document.getElementById("mode-practice").setAttribute("aria-pressed", String(m === "practice"));
     document.getElementById("s-day").innerHTML =
@@ -241,6 +243,7 @@
       if (s && s.day === dayNumber()) {
         startTs = s.startTs;
         over = !!s.over;
+        doneMs = s.doneMs == null ? null : s.doneMs;
         (s.guesses || []).forEach(function (g) {
           guesses.push(g);
           paintRow(guesses.length - 1, g, evaluate(g, answer), true);
@@ -263,7 +266,9 @@
       toast(won ? ["Genius.", "Splendid.", "Nice.", "Close one.", "Phew.", "That was tight."][guesses.length - 1]
                 : "It was “" + answer.toUpperCase() + "”", 2600);
     }
-    if (startTs) document.getElementById("s-time").textContent = Arcade.fmtTime(elapsed());
+    if (doneMs != null) document.getElementById("s-time").textContent = Arcade.fmtTime(doneMs);
+    else if (startTs) document.getElementById("s-time").textContent = Arcade.fmtTime(elapsed());
+    if (won && mode === "daily") showSubmitUI();
   }
 
   function elapsed() { return startTs ? Date.now() - startTs : 0; }
@@ -282,6 +287,7 @@
 
     if (won || guesses.length === ROWS) {
       over = true;
+      doneMs = timeMs;
       Arcade.addScore("wordle", {
         result: won ? "win" : "loss",
         guesses: guesses.length,
@@ -290,27 +296,45 @@
         day: mode === "daily" ? dayNumber() : null
       });
       finishUI(won);
-      if (won && mode === "daily") submitGlobal(timeMs);
     }
     saveDaily();
   }
 
-  /* daily wins go to the global board; the worker re-checks the guesses
-     against the real answer before ranking anything */
-  function submitGlobal(timeMs) {
+  /* A daily win goes to the global board once the player picks a name, the
+     same flow as flowcode's post-run submit. The worker re-checks every
+     guess against the real answer before ranking anything. */
+  function showSubmitUI() {
+    var input = document.getElementById("run-name");
+    var stored = Arcade.getPlayer();
+    input.value = stored === "player" ? "" : stored;
+    document.getElementById("run-status").textContent = "";
+    document.getElementById("btn-submit-run").disabled = false;
+    document.getElementById("submit-run").style.display = "flex";
+  }
+
+  function submitRun() {
+    var input = document.getElementById("run-name");
+    var status = document.getElementById("run-status");
+    var btn = document.getElementById("btn-submit-run");
+    var name = input.value.trim();
+    if (!name) {
+      status.textContent = "enter a name first";
+      input.focus();
+      return;
+    }
     if (!window.Arcade || !Arcade.submit) return;
+    Arcade.setPlayer(name);
+    btn.disabled = true;
+    status.textContent = "verifying…";
     Arcade.submit("wordle", {
       day: dayNumber(),
       guesses: guesses.slice(),
-      timeMs: timeMs
+      timeMs: doneMs == null ? 1000 : doneMs
     }).then(function (res) {
-      if (res && res.rank) {
-        setTimeout(function () {
-          toast("#" + res.rank + " on today's board — see the leaderboard", 3200);
-        }, 2800);
-      }
-    }).catch(function () {
-      toast("Global board unreachable — run saved locally", 2600);
+      status.textContent = res && res.rank ? "verified, ranked #" + res.rank : "verified";
+    }).catch(function (e) {
+      status.textContent = e.message || "submission failed";
+      btn.disabled = false;
     });
   }
 
@@ -348,6 +372,7 @@
   /* ── wire up ── */
   document.addEventListener("keydown", function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
     var k = e.key;
     if (k === "Enter" || k === "Backspace") { e.preventDefault(); onKey(k); }
     else if (/^[a-zA-Z]$/.test(k)) onKey(k.toLowerCase());
@@ -355,6 +380,10 @@
   kbd.addEventListener("click", function (e) {
     var b = e.target.closest("[data-key]");
     if (b) onKey(b.dataset.key);
+  });
+  document.getElementById("btn-submit-run").addEventListener("click", submitRun);
+  document.getElementById("run-name").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitRun();
   });
   document.getElementById("mode-daily").addEventListener("click", function () { newGame("daily"); });
   document.getElementById("mode-practice").addEventListener("click", function () { newGame("practice"); });
@@ -364,7 +393,7 @@
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(
         function () { toast("Copied to clipboard"); },
-        function () { toast("Couldn't copy — select manually"); }
+        function () { toast("Couldn't copy, select manually"); }
       );
     } else {
       window.prompt("Copy your result:", text);
