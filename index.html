@@ -67,13 +67,7 @@
     .game-wrap { max-width: 520px; margin-inline: auto; padding-inline: 24px; }
     .game-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; }
     .mode-pills { display: flex; gap: 6px; }
-    .pill {
-      font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px;
-      transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
-    }
-    .pill:hover { color: var(--text-primary); }
-    .pill[aria-pressed="true"] { color: #0a0a0a; background: var(--accent); border-color: var(--accent); }
+    /* .pill lives in /assets/site.css, shared with the board widget below */
 
     #board { display: grid; gap: 6px; margin-top: 28px; }
     .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
@@ -175,6 +169,8 @@
 
     <div id="kbd" aria-label="On-screen keyboard"></div>
 
+    <section class="board-embed" id="board-embed" aria-label="Global leaderboard"></section>
+
     <p style="margin-top: 32px; font-size: 13px; color: var(--text-muted); line-height: 1.7;">
       Guess the hidden five-letter word in six tries. After each guess the tiles
       show how close you are: <span style="color: var(--success);">green</span> means right letter,
@@ -201,5 +197,10 @@
 
 <script src="/assets/arcade.js"></script>
 <script src="game.js"></script>
+<script>
+  Arcade.mountBoard(document.getElementById("board-embed"), {
+    game: "wordle", title: "Global board", limit: 10, selfLink: false
+  });
+</script>
 </body>
 </html>
