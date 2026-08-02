@@ -64,11 +64,6 @@
   </script>
 
   <style>
-    .game-wrap { max-width: 520px; margin-inline: auto; padding-inline: 24px; }
-    .game-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; }
-    .mode-pills { display: flex; gap: 6px; }
-    /* .pill lives in /assets/site.css, shared with the board widget below */
-
     #board { display: grid; gap: 6px; margin-top: 28px; }
     .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .tile {
@@ -112,9 +107,8 @@
     }
     #msg.show { opacity: 1; }
 
-    .statusline { display: flex; gap: 16px; margin-top: 20px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); flex-wrap: wrap; }
-    .statusline b { color: var(--text-secondary); font-weight: 500; }
-    #endbar { margin-top: 20px; display: none; gap: 10px; flex-wrap: wrap; align-items: center; }
+    /* the end-of-run row is a toolbar that only shows once the word is out */
+    #endbar { display: none; }
     #endbar.show { display: flex; }
     @media (prefers-reduced-motion: reduce) { .row.shake { animation: none; } .tile.filled { transform: none; } }
   </style>
@@ -136,7 +130,7 @@
     <div class="game-head">
       <div>
         <p class="eyebrow">Cabinet 01</p>
-        <h1 style="font-size: 28px; margin-top: 6px;">Wordle</h1>
+        <h1>Wordle</h1>
       </div>
       <div class="mode-pills" role="group" aria-label="Game mode">
         <button class="pill" id="mode-daily" aria-pressed="true">Daily</button>
@@ -152,22 +146,23 @@
 
     <div id="board" aria-label="Guess grid"></div>
 
-    <div id="submit-run" style="display: none; margin-top: 20px; gap: 8px; align-items: center; flex-wrap: wrap;">
-      <input id="run-name" maxlength="16" placeholder="your name" autocomplete="nickname" spellcheck="false"
-             style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
-                    color: var(--text-primary); font-family: var(--font-mono); font-size: 13px;
-                    padding: 7px 12px; width: 150px;" />
+    <div class="submit-run" id="submit-run">
+      <input id="run-name" maxlength="16" placeholder="your name" autocomplete="nickname" spellcheck="false" />
       <button class="btn btn-primary btn-sm" id="btn-submit-run">Submit run</button>
-      <span class="mono" id="run-status" style="font-size: 11px; color: var(--text-secondary);"></span>
+      <span class="run-status" id="run-status"></span>
     </div>
 
-    <div id="endbar">
+    <div class="toolbar" id="endbar">
       <button class="btn btn-primary btn-sm" id="btn-share">Share result</button>
       <button class="btn btn-secondary btn-sm" id="btn-again" hidden>New word</button>
-      <a class="btn btn-secondary btn-sm" href="/leaderboard/">Leaderboard</a>
     </div>
 
     <div id="kbd" aria-label="On-screen keyboard"></div>
+
+    <div class="toolbar">
+      <a class="btn btn-secondary btn-sm" href="/arcade/">Arcade</a>
+      <a class="btn btn-secondary btn-sm" href="/leaderboard/">Leaderboard</a>
+    </div>
 
     <section class="board-embed" id="board-embed" aria-label="Global leaderboard"></section>
 
@@ -188,9 +183,10 @@
   <div class="container">
     <span>© 2026 Artem Kovtoniuk</span>
     <div class="links">
+      <a href="/">home</a>
       <a href="/arcade/">arcade</a>
       <a href="/leaderboard/">leaderboard</a>
-      <a href="https://github.com/Maybaah/Maybaah.github.io">source</a>
+      <a href="https://github.com/Maybaah/wordle">source</a>
     </div>
   </div>
 </footer>
