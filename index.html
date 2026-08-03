@@ -9,7 +9,7 @@
   <meta name="author" content="Artem Kovtoniuk" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
   <link rel="canonical" href="https://maybaah.github.io/wordle/" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#09090b" />
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="maybaah.github.io" />
@@ -32,7 +32,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/assets/site.css" />
 
@@ -69,13 +69,13 @@
     .tile {
       aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
       font-family: var(--font-mono); font-size: clamp(20px, 5vw, 28px); font-weight: 600; text-transform: uppercase;
-      background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px;
+      background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
       transition: background 250ms ease, border-color 250ms ease, transform 120ms ease;
     }
     .tile.filled { border-color: var(--border-focus); transform: scale(1.04); }
-    .tile.correct { background: #14532d; border-color: var(--success); color: #fff; }
-    .tile.present { background: #57340b; border-color: var(--warning); color: #fff; }
-    .tile.absent  { background: var(--bg-elevated); border-color: var(--bg-elevated); color: var(--text-muted); }
+    .tile.correct { background: #14532d; border-color: var(--success); color: #fafafa; }
+    .tile.present { background: #57340b; border-color: var(--warning); color: #fafafa; }
+    .tile.absent  { background: var(--bg-elevated); border-color: var(--bg-elevated); color: var(--text-secondary); }
 
     .row.shake { animation: shake 400ms ease; }
     @keyframes shake {
@@ -89,7 +89,7 @@
     .key {
       flex: 1; max-width: 44px; height: 52px; display: flex; align-items: center; justify-content: center;
       font-family: var(--font-mono); font-size: 13px; font-weight: 500; text-transform: uppercase;
-      background: var(--bg-elevated); border-radius: 6px; color: var(--text-primary);
+      background: var(--bg-elevated); border-radius: var(--radius-sm); color: var(--text-primary);
       transition: background 150ms ease, color 150ms ease;
       user-select: none; -webkit-user-select: none; touch-action: manipulation;
     }
@@ -97,11 +97,11 @@
     .key.wide { max-width: 68px; flex: 1.6; font-size: 11px; }
     .key.correct { background: #14532d; }
     .key.present { background: #57340b; }
-    .key.absent  { background: var(--bg-surface); color: var(--text-muted); }
+    .key.absent  { background: var(--bg-surface); color: var(--text-secondary); }
 
     #msg {
       position: fixed; left: 50%; top: 76px; transform: translateX(-50%);
-      background: var(--bg-overlay); border: 1px solid var(--border); border-radius: 8px;
+      background: var(--bg-overlay); border: 1px solid var(--border); border-radius: var(--radius-md);
       padding: 8px 16px; font-family: var(--font-mono); font-size: 13px;
       opacity: 0; pointer-events: none; transition: opacity 200ms ease; z-index: 60;
     }
@@ -166,7 +166,7 @@
 
     <section class="board-embed" id="board-embed" aria-label="Global leaderboard"></section>
 
-    <p style="margin-top: 32px; font-size: 13px; color: var(--text-muted); line-height: 1.7;">
+    <p style="margin-top: 32px; font-size: 13px; color: var(--text-secondary); line-height: 1.7;">
       Guess the hidden five-letter word in six tries. After each guess the tiles
       show how close you are: <span style="color: var(--success);">green</span> means right letter,
       right spot; <span style="color: var(--warning);">amber</span> means in the word, wrong spot;
