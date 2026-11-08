@@ -64,11 +64,11 @@
   </script>
 
   <style>
-    #board { display: grid; gap: 6px; margin-top: 28px; }
-    .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    #board { display: grid; gap: 6px; margin: 28px auto 0; max-width: 344px; }
+    #board .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 0; border: 0; }
     .tile {
       aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-size: clamp(20px, 5vw, 28px); font-weight: 600; text-transform: uppercase;
+      font-family: var(--font-mono); font-size: clamp(20px, 5vw, 28px); font-weight: 500; text-transform: uppercase;
       background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
       transition: background 250ms ease, border-color 250ms ease, transform 120ms ease;
     }
